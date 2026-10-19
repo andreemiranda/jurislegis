@@ -1,6 +1,6 @@
 # Portal institucional e legislativo de Câmara Municipal
 
-Réplica institucional do portal legislativo da Câmara Municipal de Paraíso do Tocantins - TO, desenvolvida em Next.js (App Router), TypeScript, e integrada de forma desacoplada à API REST do WordPress.
+Réplica institucional do portal legislativo, desenvolvida em Next.js (App Router), TypeScript, e integrada de forma desacoplada à API REST do WordPress.
 
 ## Tecnologias
 
