@@ -1,0 +1,6 @@
+{
+  "name": "Câmara Municipal de Paraíso do Tocantins",
+  "description": "Portal institucional e legislativo da Câmara Municipal de Paraíso do Tocantins - TO. Notícias, sessões plenárias, transparência, vereadores e serviços ao cidadão.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

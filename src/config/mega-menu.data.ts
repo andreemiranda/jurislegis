@@ -1,0 +1,316 @@
+export interface MegaMenuModule {
+  nome: string;
+  link: string;
+}
+
+export interface MegaMenuGrupo {
+  grupo: string;
+  modulos: MegaMenuModule[];
+}
+
+export interface MegaMenuData {
+  title: string;
+  col1: MegaMenuGrupo[];
+  col2: MegaMenuGrupo[];
+  col3: MegaMenuGrupo[];
+  col4: MegaMenuGrupo[];
+}
+
+export const defaultMegaMenuData: MegaMenuData = {
+  title: 'Acesso à Informação',
+  col1: [
+    {
+      grupo: 'Informações Institucionais',
+      modulos: [
+        {
+          nome: 'Estrutura Organizacional',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/informacao/estruturaorganizacional',
+        },
+        {
+          nome: 'Perguntas Frequentes',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/ouvidoria/perguntas',
+        },
+        {
+          nome: 'Radar da Transparência',
+          link: 'https://radardatransparencia.atricon.org.br',
+        },
+      ],
+    },
+    {
+      grupo: 'Convênios e Transferências',
+      modulos: [
+        {
+          nome: 'Convênios e Transferências Recebidas',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/informacao/convenios_tr',
+        },
+        {
+          nome: 'Convênios e Transferências Concedidas',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/informacao/convenios_tc',
+        },
+        {
+          nome: 'Parcerias, Acordos e Outros Termos',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/informacao/parcerias_acordos',
+        },
+      ],
+    },
+    {
+      grupo: 'Contratos',
+      modulos: [
+        {
+          nome: 'Contratos',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/informacao/contratos_cnt',
+        },
+        {
+          nome: 'Aditivos e Distratos',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/informacao/aditivos_cnt',
+        },
+        {
+          nome: 'Fiscais de Contratos',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/informacao/fiscais_contratos_sg',
+        },
+        {
+          nome: 'Ordem Cronológica de Pagamentos',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/informacao/mp/id=24',
+        },
+      ],
+    },
+    {
+      grupo: 'Ouvidoria',
+      modulos: [
+        {
+          nome: 'Início',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/ouvidoria/inicio',
+        },
+        {
+          nome: 'Solicitação de Serviço',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/ouvidoria/solicitacaoservico',
+        },
+        {
+          nome: 'Elogios',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/ouvidoria/elogio',
+        },
+        {
+          nome: 'Sugestões',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/ouvidoria/sugestao',
+        },
+        {
+          nome: 'Reclamações',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/ouvidoria/reclamacao',
+        },
+        {
+          nome: 'Denúncias',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/ouvidoria/denuncia',
+        },
+        {
+          nome: 'Carta de Serviços aos Usuários',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/outras_informacoes/mp/id=1',
+        },
+      ],
+    },
+  ],
+  col2: [
+    {
+      grupo: 'Servidores e Recursos Humanos',
+      modulos: [
+        {
+          nome: 'Quadro de Servidores e Folha',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/folhadepagamento/servidores',
+        },
+        {
+          nome: 'Tabela Salarial / Padrão Remuneratório',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/folhadepagamento/tabelasalarial',
+        },
+        {
+          nome: 'Servidores Terceirizados',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/informacao/terceirizados',
+        },
+        {
+          nome: 'Concursos Públicos',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/concursos_selecoes/concursos',
+        },
+        {
+          nome: 'Processos Seletivos',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/concursos_selecoes/selecoes',
+        },
+      ],
+    },
+    {
+      grupo: 'Obras',
+      modulos: [
+        {
+          nome: 'Acompanhamento de Obras',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/informacao/obras',
+        },
+        {
+          nome: 'Consulta de Obras Paralisadas',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/informacao/obras_paralisadas',
+        },
+      ],
+    },
+    {
+      grupo: 'LGPD e Governo Digital',
+      modulos: [
+        {
+          nome: 'Encarregado LGPD',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/outras_informacoes/encarregado_lgpd',
+        },
+        {
+          nome: 'Política de Privacidade',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/p/politica_privacidade',
+        },
+        {
+          nome: 'Serviços',
+          link: '/servicos/',
+        },
+        {
+          nome: 'Acesso Automatizado aos Dados Abertos (API)',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/outras_informacoes/acesso_automatizado',
+        },
+        {
+          nome: 'Regulamentação Lei do Governo Digital',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/legislacao/decreto/id=10',
+        },
+        {
+          nome: 'Pesquisas de Satisfação',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/outras_informacoes/pesquisas_satisfacao',
+        },
+      ],
+    },
+  ],
+  col3: [
+    {
+      grupo: 'Receitas',
+      modulos: [
+        {
+          nome: 'Duodécimo (Receitas)',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/transparencia/sgduodecimo',
+        },
+      ],
+    },
+    {
+      grupo: 'Diárias',
+      modulos: [
+        {
+          nome: 'Diárias e Passagens',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/transparencia/diarias_cnt',
+        },
+        {
+          nome: 'Tabela de Valores de Diárias',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/transparencia/tabeladiarias',
+        },
+      ],
+    },
+    {
+      grupo: 'Planejamento e Prestação de Contas',
+      modulos: [
+        {
+          nome: 'Prestação de Contas (Balanço Anual)',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/resp_fiscal/balancoscnt',
+        },
+        {
+          nome: 'Relatório de Gestão ou Atividades',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/resp_fiscal/relatorios_circunstanciados',
+        },
+        {
+          nome: 'Parecer do Tribunal de Contas',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/resp_fiscal/tcpareceres',
+        },
+        {
+          nome: 'Relatórios de Gestão Fiscal (RGF)',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/resp_fiscal/rgfscnt',
+        },
+      ],
+    },
+    {
+      grupo: 'Atos Legislativos',
+      modulos: [
+        {
+          nome: 'Atividades Legislativas',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/legislacao/atividades_legislativas',
+        },
+        {
+          nome: 'Leis Municipais',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/legislacao/leis',
+        },
+        {
+          nome: 'Decretos Legislativos',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/legislacao/decretos',
+        },
+        {
+          nome: 'Resoluções',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/legislacao/resolucoes',
+        },
+        {
+          nome: 'Pautas e Atas das Sessões',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/atos_adm/mp/id=6',
+        },
+        {
+          nome: 'Transmissão das Sessões',
+          link: '/transmissao-das-sessoes/',
+        },
+      ],
+    },
+  ],
+  col4: [
+    {
+      grupo: 'Despesas',
+      modulos: [
+        {
+          nome: 'Despesas e Pagamentos',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/transparencia/cntdespesas',
+        },
+      ],
+    },
+    {
+      grupo: 'Licitações e Contratos',
+      modulos: [
+        {
+          nome: 'Licitações',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/informacao/licitacoes_cnt',
+        },
+        {
+          nome: 'Dispensas e Inexigibilidades',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/informacao/dispensas_cnt',
+        },
+        {
+          nome: 'Plano de Contratações Anual (PCA)',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/informacao/plano_anual_contratacoes',
+        },
+      ],
+    },
+    {
+      grupo: 'SIC - Serviço de Informação ao Cidadão',
+      modulos: [
+        {
+          nome: 'SIC - Informações ao Cidadão',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/informacao/sic',
+        },
+        {
+          nome: 'Regulamentação da LAI',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/legislacao/decreto/id=8',
+        },
+        {
+          nome: 'Relatório Estatístico do e-SIC',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/impressao/relatorio_sic',
+        },
+      ],
+    },
+    {
+      grupo: 'Outras Informações',
+      modulos: [
+        {
+          nome: 'Referências Normativas',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/p/referencias_normativas',
+        },
+        {
+          nome: 'Glossário e Termos Técnicos',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/cidadao/p/glossario',
+        },
+        {
+          nome: 'Portal Oficial da Transparência',
+          link: 'https://acessoainformacao.paraisodotocantins.to.leg.br/',
+        },
+      ],
+    },
+  ],
+};
