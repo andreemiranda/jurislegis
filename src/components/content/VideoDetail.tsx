@@ -5,6 +5,7 @@ import { ContentRenderer } from './ContentRenderer';
 import { Video, Calendar, ArrowLeft, ExternalLink } from 'lucide-react';
 import { rewriteUrl } from '../../lib/links/rewrite';
 import { siteConfig } from '../../config/site.config';
+import { getVideoDetails } from '../../lib/youtube/youtube';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
@@ -13,7 +14,8 @@ interface VideoDetailProps {
 }
 
 export function VideoDetail({ video }: VideoDetailProps) {
-  const title = video.title?.rendered?.replace(/<[^>]+>/g, '') || 'Vídeo';
+  const details = getVideoDetails(video);
+  const title = video.title?.rendered?.replace(/<[^>]+>/g, '') || 'Sessão Plenária';
   let formattedDate = video.date;
   try {
     formattedDate = format(new Date(video.date), "dd 'de' MMMM 'de' yyyy", { locale: ptBR });
@@ -51,14 +53,15 @@ export function VideoDetail({ video }: VideoDetailProps) {
         )}
       </header>
 
-      {/* Reprodutor de Vídeo */}
+      {/* Reprodutor de Vídeo YouTube com ID oficial */}
       <div className="bg-black rounded-2xl overflow-hidden shadow-xl mb-10">
         <div className="relative aspect-video w-full">
           <iframe
-            src="https://www.youtube.com/embed?listType=search&list=Câmara%20Municipal%20de%20Paraíso%20do%20Tocantins"
+            key={details.embedUrl}
+            src={details.embedUrl}
             title={title}
             className="absolute inset-0 w-full h-full border-0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
           />
         </div>

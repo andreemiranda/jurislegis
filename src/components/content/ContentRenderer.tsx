@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { sanitizeContentHtml } from '../../lib/sanitize/sanitize';
 import { rewriteHtmlLinks, rewriteUrl } from '../../lib/links/rewrite';
+import { extractYouTubeId, getYouTubeEmbedUrl } from '../../lib/youtube/youtube';
 
 interface ContentRendererProps {
   content: string;
@@ -14,13 +15,42 @@ export function ContentRenderer({ content }: ContentRendererProps) {
 
   // 1. Reescreve URLs e mídias
   const rewritten = rewriteHtmlLinks(content);
-  // 2. Sanitiza o HTML preservando blocos
+  // 2. Sanitiza o HTML preservando blocos e tags seguras
   const cleanHtml = sanitizeContentHtml(rewritten);
 
   // 3. Substitui tags HTML por componentes React nativos/otimizados
   const parsed = parse(cleanHtml, {
     replace: (domNode: DOMNode) => {
       if (!(domNode instanceof Element)) return;
+
+      // Parágrafo com link direto para YouTube (comportamento nativo do WordPress oEmbed)
+      if (domNode.name === 'p') {
+        const firstChild = domNode.children?.[0];
+        let potentialUrl: string | undefined;
+
+        if (firstChild && (firstChild as any).data) {
+          potentialUrl = (firstChild as any).data;
+        } else if (firstChild && (firstChild as Element).name === 'a') {
+          potentialUrl = (firstChild as Element).attribs?.href;
+        }
+
+        if (potentialUrl && typeof potentialUrl === 'string') {
+          const ytId = extractYouTubeId(potentialUrl.trim());
+          if (ytId) {
+            return (
+              <div className="relative aspect-video w-full my-6 rounded-xl overflow-hidden shadow-lg bg-black">
+                <iframe
+                  src={getYouTubeEmbedUrl(ytId)}
+                  title="Vídeo Incorporado do YouTube"
+                  className="absolute inset-0 w-full h-full border-0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                />
+              </div>
+            );
+          }
+        }
+      }
 
       // Substituição de tabelas com scroll horizontal responsivo
       if (domNode.name === 'table') {
@@ -92,13 +122,19 @@ export function ContentRenderer({ content }: ContentRendererProps) {
         );
       }
 
-      // Iframes responsivos para vídeos e mapas
+      // Iframes responsivos para vídeos e mapas (normaliza URLs do YouTube para /embed/)
       if (domNode.name === 'iframe') {
+        const rawSrc = domNode.attribs.src || '';
+        const ytId = extractYouTubeId(rawSrc);
+        const finalSrc = ytId ? getYouTubeEmbedUrl(ytId) : rawSrc;
+
         return (
-          <div className="relative aspect-video w-full my-6 rounded-lg overflow-hidden shadow-md">
+          <div className="relative aspect-video w-full my-6 rounded-xl overflow-hidden shadow-lg bg-black">
             <iframe
               {...domNode.attribs}
+              src={finalSrc}
               className="absolute inset-0 w-full h-full border-0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
             />
           </div>

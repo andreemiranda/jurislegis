@@ -31,6 +31,9 @@ export function sanitizeContentHtml(rawHtml: string): string {
     allowedIframeHostnames: [
       'www.youtube.com',
       'youtube.com',
+      'www.youtube-nocookie.com',
+      'youtube-nocookie.com',
+      'youtu.be',
       'player.vimeo.com',
       'maps.google.com',
       'www.google.com',
