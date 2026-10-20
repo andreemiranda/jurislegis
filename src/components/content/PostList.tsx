@@ -6,6 +6,7 @@ import { WpPost } from '../../lib/wordpress/schemas';
 import { Breadcrumbs } from './Breadcrumbs';
 import { Pagination } from './Pagination';
 import { rewriteUrl } from '../../lib/links/rewrite';
+import { getPostCategoryName } from '../../lib/wordpress/categories';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
@@ -63,6 +64,7 @@ export function PostList({
                 ? rewriteUrl(mediaUrl).url
                 : '/arquivos/2024/05/logo-paraios.png';
               const formattedDate = formatPostDate(post.date);
+              const categoryName = getPostCategoryName(post);
 
               return (
                 <article
@@ -78,6 +80,11 @@ export function PostList({
                       referrerPolicy="no-referrer"
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
+                    {categoryName && (
+                      <span className="absolute top-3 left-3 bg-[#175057] text-white text-xs font-bold px-2.5 py-1 rounded-sm shadow-xs">
+                        {categoryName}
+                      </span>
+                    )}
                   </Link>
 
                   <div className="p-5 flex-1 flex flex-col">

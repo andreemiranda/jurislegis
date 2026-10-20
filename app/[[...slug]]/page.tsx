@@ -10,11 +10,19 @@ import {
   getCategoryBySlug,
   getVereadores,
   getVideos,
+  getVideoBySlug,
   getBanners,
+  getServicos,
+  getServicoBySlug,
+  getAvisos,
+  getAvisoBySlug,
+  getGalerias,
+  getGaleriaBySlug,
+  getEstruturaBySlug,
+  getPostsByDate,
   getRelatedPosts,
   getAdjacentPosts,
   searchContent,
-  getAllPages,
 } from '../../src/lib/wordpress/queries';
 import { BannerSlider } from '../../src/components/home/BannerSlider';
 import { QuickAccess } from '../../src/components/home/QuickAccess';
@@ -26,8 +34,18 @@ import { PostDetail } from '../../src/components/content/PostDetail';
 import { PageDetail } from '../../src/components/content/PageDetail';
 import { VereadorDetail } from '../../src/components/content/VereadorDetail';
 import { PostList } from '../../src/components/content/PostList';
+import { ServicesList } from '../../src/components/content/ServicesList';
+import { ServiceDetail } from '../../src/components/content/ServiceDetail';
+import { AvisosArchive } from '../../src/components/content/AvisosArchive';
+import { AvisoDetail } from '../../src/components/content/AvisoDetail';
+import { VideosArchive } from '../../src/components/content/VideosArchive';
+import { VideoDetail } from '../../src/components/content/VideoDetail';
+import { GaleriasArchive } from '../../src/components/content/GaleriasArchive';
+import { GaleriaDetail } from '../../src/components/content/GaleriaDetail';
+import { FaleConoscoPage } from '../../src/components/content/FaleConoscoPage';
+import { MapaDoSitePage } from '../../src/components/content/MapaDoSitePage';
+import { AcessibilidadePage } from '../../src/components/content/AcessibilidadePage';
 import { constructMetadata } from '../../src/lib/seo/metadata';
-import { env } from '../../src/config/env';
 
 export const dynamicParams = true;
 export const revalidate = 300;
@@ -57,6 +75,107 @@ export async function generateMetadata({
     return constructMetadata({
       title: 'Início',
       canonicalPath: '/',
+    });
+  }
+
+  if (route.type === 'noticias-archive') {
+    return constructMetadata({
+      title: 'Notícias da Câmara',
+      description: 'Acompanhe as notícias e coberturas legislativas da Câmara Municipal de Paraíso do Tocantins.',
+      canonicalPath: '/noticias/',
+    });
+  }
+
+  if (route.type === 'services-archive') {
+    return constructMetadata({
+      title: 'Serviços ao Cidadão',
+      description: 'Carta de serviços oferecidos pelo Poder Legislativo aos cidadãos.',
+      canonicalPath: '/servicos/',
+    });
+  }
+
+  if (route.type === 'servico') {
+    const servico = await getServicoBySlug(route.slug);
+    const title = servico?.title?.rendered?.replace(/<[^>]+>/g, '') || 'Serviço';
+    return constructMetadata({
+      title,
+      description: servico?.excerpt?.rendered?.replace(/<[^>]+>/g, '')?.trim(),
+      canonicalPath: `/servico/${route.slug}/`,
+    });
+  }
+
+  if (route.type === 'avisos-archive') {
+    return constructMetadata({
+      title: 'Avisos Oficiais',
+      description: 'Editais, convocações e comunicados oficiais da Câmara Municipal.',
+      canonicalPath: '/avisos/',
+    });
+  }
+
+  if (route.type === 'aviso') {
+    const aviso = await getAvisoBySlug(route.slug);
+    const title = aviso?.title?.rendered?.replace(/<[^>]+>/g, '') || 'Aviso Oficial';
+    return constructMetadata({
+      title,
+      canonicalPath: `/aviso/${route.slug}/`,
+    });
+  }
+
+  if (route.type === 'videos-archive' || route.type === 'transmissao-sessoes') {
+    return constructMetadata({
+      title: 'Transmissão das Sessões - TV Câmara',
+      description: 'Assista ao vivo ou veja as gravações das sessões plenárias da Câmara.',
+      canonicalPath: route.fullPath,
+    });
+  }
+
+  if (route.type === 'video') {
+    const video = await getVideoBySlug(route.slug);
+    const title = video?.title?.rendered?.replace(/<[^>]+>/g, '') || 'Sessão Plenária';
+    return constructMetadata({
+      title,
+      canonicalPath: `/video/${route.slug}/`,
+    });
+  }
+
+  if (route.type === 'galerias-archive') {
+    return constructMetadata({
+      title: 'Galeria de Fotos',
+      description: 'Cobertura fotográfica dos eventos e sessões solenes da Câmara.',
+      canonicalPath: '/galeria-de-fotos/',
+    });
+  }
+
+  if (route.type === 'galeria') {
+    const galeria = await getGaleriaBySlug(route.slug);
+    const title = galeria?.title?.rendered?.replace(/<[^>]+>/g, '') || 'Álbum Fotográfico';
+    return constructMetadata({
+      title,
+      canonicalPath: `/galeria/${route.slug}/`,
+    });
+  }
+
+  if (route.type === 'fale-conosco') {
+    return constructMetadata({
+      title: 'Fale Conosco',
+      description: 'Canais de atendimento, ouvidoria e contato presencial com a Câmara Municipal.',
+      canonicalPath: '/fale-conosco/',
+    });
+  }
+
+  if (route.type === 'mapa-do-site') {
+    return constructMetadata({
+      title: 'Mapa do Site',
+      description: 'Índice de navegação estruturada de todo o portal legislativo.',
+      canonicalPath: '/mapa-do-site/',
+    });
+  }
+
+  if (route.type === 'acessibilidade') {
+    return constructMetadata({
+      title: 'Declaração de Acessibilidade',
+      description: 'Diretrizes, recursos de alto contraste e atalhos de navegação e-MAG e WCAG 2.1.',
+      canonicalPath: '/acessibilidade/',
     });
   }
 
@@ -125,9 +244,6 @@ export default async function CatchAllPage({ params, searchParams }: PageProps) 
   if (searchQuery) {
     const pageNum = parseInt(queryPage || '1', 10);
     const searchRes = await searchContent(searchQuery, pageNum, 12);
-    const postIds = searchRes.results.map((r) => r.id);
-
-    // Se temos IDs de posts da busca, busca os posts completos para exibir com thumbnails
     let postsData = await getPosts({ search: searchQuery, page: pageNum, perPage: 12 });
 
     return (
@@ -146,7 +262,6 @@ export default async function CatchAllPage({ params, searchParams }: PageProps) 
 
   // 2. Home Page
   if (route.type === 'home') {
-    // Se for página paginada da home (/page/2), exibe listagem de notícias
     if (route.pageNumber && route.pageNumber > 1) {
       const postsData = await getPosts({ page: route.pageNumber, perPage: 12 });
       return (
@@ -161,7 +276,6 @@ export default async function CatchAllPage({ params, searchParams }: PageProps) 
       );
     }
 
-    // Home oficial com todos os blocos institucionais do tema Araguaia
     const [postsRes, vereadores, videos, banners] = await Promise.all([
       getPosts({ perPage: 6 }).catch(() => ({ posts: [], total: 0, totalPages: 0 })),
       getVereadores().catch(() => []),
@@ -188,7 +302,89 @@ export default async function CatchAllPage({ params, searchParams }: PageProps) 
     );
   }
 
-  // 3. Rota de Vereador: /vereador/[slug]
+  // 3. Notícias Arquivo: /noticias ou /noticias/page/2
+  if (route.type === 'noticias-archive') {
+    const pageNum = route.pageNumber || 1;
+    const postsData = await getPosts({ page: pageNum, perPage: 12 });
+    return (
+      <PostList
+        title="Notícias da Câmara"
+        description="Acompanhe todas as matérias, sessões e comunicados oficiais do Poder Legislativo"
+        posts={postsData.posts}
+        currentPage={pageNum}
+        totalPages={postsData.totalPages}
+        basePath="/noticias"
+      />
+    );
+  }
+
+  // 4. Serviços Arquivo e Individual: /servicos e /servico/[slug]
+  if (route.type === 'services-archive') {
+    const services = await getServicos().catch(() => []);
+    return <ServicesList services={services} />;
+  }
+
+  if (route.type === 'servico') {
+    const servico = await getServicoBySlug(route.slug);
+    if (!servico) notFound();
+    return <ServiceDetail service={servico} />;
+  }
+
+  // 5. Avisos Arquivo e Individual: /avisos e /aviso/[slug]
+  if (route.type === 'avisos-archive') {
+    const avisos = await getAvisos().catch(() => []);
+    return <AvisosArchive avisos={avisos} />;
+  }
+
+  if (route.type === 'aviso') {
+    const aviso = await getAvisoBySlug(route.slug);
+    if (!aviso) notFound();
+    return <AvisoDetail aviso={aviso} />;
+  }
+
+  // 6. Vídeos e Transmissão de Sessões: /videos, /transmissao-das-sessoes, /sessoes, /video/[slug]
+  if (route.type === 'videos-archive') {
+    const videos = await getVideos(30).catch(() => []);
+    return <VideosArchive videos={videos} title="Galeria de Vídeos da Câmara" />;
+  }
+
+  if (route.type === 'transmissao-sessoes') {
+    const videos = await getVideos(30).catch(() => []);
+    return <VideosArchive videos={videos} title="Transmissão das Sessões Plenárias" isLivePage={true} />;
+  }
+
+  if (route.type === 'video') {
+    const video = await getVideoBySlug(route.slug);
+    if (!video) notFound();
+    return <VideoDetail video={video} />;
+  }
+
+  // 7. Galerias de Fotos: /galeria-de-fotos, /galeria-de-fotos-2, /galeria/[slug]
+  if (route.type === 'galerias-archive') {
+    const galerias = await getGalerias().catch(() => []);
+    return <GaleriasArchive galerias={galerias} />;
+  }
+
+  if (route.type === 'galeria') {
+    const galeria = await getGaleriaBySlug(route.slug);
+    if (!galeria) notFound();
+    return <GaleriaDetail galeria={galeria} />;
+  }
+
+  // 8. Páginas Especiais: Fale Conosco, Mapa do Site, Acessibilidade
+  if (route.type === 'fale-conosco') {
+    return <FaleConoscoPage />;
+  }
+
+  if (route.type === 'mapa-do-site') {
+    return <MapaDoSitePage />;
+  }
+
+  if (route.type === 'acessibilidade') {
+    return <AcessibilidadePage />;
+  }
+
+  // 9. Rota de Vereador: /vereador/[slug]
   if (route.type === 'vereador') {
     const vereador = await getVereadorBySlug(route.slug);
     if (!vereador) {
@@ -197,7 +393,7 @@ export default async function CatchAllPage({ params, searchParams }: PageProps) 
     return <VereadorDetail vereador={vereador} />;
   }
 
-  // 4. Rota de Categoria: /categoria/[slug]
+  // 10. Rota de Categoria: /categoria/[slug]
   if (route.type === 'category') {
     const category = await getCategoryBySlug(route.slug);
     const pageNum = route.pageNumber || 1;
@@ -220,7 +416,7 @@ export default async function CatchAllPage({ params, searchParams }: PageProps) 
     );
   }
 
-  // 5. Rota de Tag: /tag/[slug]
+  // 11. Rota de Tag: /tag/[slug]
   if (route.type === 'tag') {
     const pageNum = route.pageNumber || 1;
     const postsData = await getPosts({ page: pageNum, perPage: 12 });
@@ -235,7 +431,31 @@ export default async function CatchAllPage({ params, searchParams }: PageProps) 
     );
   }
 
-  // 6. Rota individual: tenta Post primeiro, depois Página
+  // 12. Arquivo por Data: /[year]/[month]
+  if (route.type === 'date-archive' && route.year && route.month) {
+    const pageNum = route.pageNumber || 1;
+    const postsData = await getPostsByDate(route.year, route.month, pageNum, 12);
+    return (
+      <PostList
+        title={`Arquivo: ${route.month}/${route.year}`}
+        description={`Notícias e atos legislativos publicados no período de ${route.month}/${route.year}`}
+        posts={postsData.posts}
+        currentPage={pageNum}
+        totalPages={postsData.totalPages}
+        basePath={`/${route.year}/${route.month}`}
+      />
+    );
+  }
+
+  // 13. Estrutura Organizacional CPT: /estrutura/[slug]
+  if (route.type === 'estrutura') {
+    const estrutura = await getEstruturaBySlug(route.slug);
+    if (estrutura) {
+      return <PageDetail page={estrutura} />;
+    }
+  }
+
+  // 14. Post Individual
   const post = await getPostBySlug(route.slug);
   if (post) {
     const [related, adjacent] = await Promise.all([
@@ -253,6 +473,7 @@ export default async function CatchAllPage({ params, searchParams }: PageProps) 
     );
   }
 
+  // 15. Página Institucional
   const page = await getPageBySlug(route.slug);
   if (page) {
     return <PageDetail page={page} />;

@@ -285,6 +285,166 @@ export async function getBanners(): Promise<any[]> {
 }
 
 /**
+ * Busca vídeo por slug
+ */
+export async function getVideoBySlug(slug: string): Promise<WpVideo | null> {
+  try {
+    const res = await wpFetch<WpVideo[]>('/videos', {
+      params: { slug, _embed: '1' },
+      tags: [`video:${slug}`],
+    });
+    return res.data?.[0] || null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Busca todos os serviços (Custom Post Type 'servico')
+ */
+export async function getServicos(): Promise<any[]> {
+  try {
+    const res = await wpFetch<any[]>('/servico', {
+      params: { per_page: 20, _embed: '1' },
+      tags: ['servicos'],
+    });
+    return res.data || [];
+  } catch (err: any) {
+    console.warn('Erro ao buscar serviços:', err.message);
+    return [];
+  }
+}
+
+/**
+ * Busca serviço por slug
+ */
+export async function getServicoBySlug(slug: string): Promise<any | null> {
+  try {
+    const res = await wpFetch<any[]>('/servico', {
+      params: { slug, _embed: '1' },
+      tags: [`servico:${slug}`],
+    });
+    return res.data?.[0] || null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Busca galerias de fotos (Custom Post Type 'galeria')
+ */
+export async function getGalerias(): Promise<any[]> {
+  try {
+    const res = await wpFetch<any[]>('/galeria', {
+      params: { per_page: 20, _embed: '1' },
+      tags: ['galerias'],
+    });
+    return res.data || [];
+  } catch (err: any) {
+    console.warn('Erro ao buscar galerias:', err.message);
+    return [];
+  }
+}
+
+/**
+ * Busca galeria por slug
+ */
+export async function getGaleriaBySlug(slug: string): Promise<any | null> {
+  try {
+    const res = await wpFetch<any[]>('/galeria', {
+      params: { slug, _embed: '1' },
+      tags: [`galeria:${slug}`],
+    });
+    return res.data?.[0] || null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Busca avisos oficiais (Custom Post Type 'aviso')
+ */
+export async function getAvisos(): Promise<any[]> {
+  try {
+    const res = await wpFetch<any[]>('/aviso', {
+      params: { per_page: 20, _embed: '1' },
+      tags: ['avisos'],
+    });
+    return res.data || [];
+  } catch (err: any) {
+    console.warn('Erro ao buscar avisos:', err.message);
+    return [];
+  }
+}
+
+/**
+ * Busca aviso por slug
+ */
+export async function getAvisoBySlug(slug: string): Promise<any | null> {
+  try {
+    const res = await wpFetch<any[]>('/aviso', {
+      params: { slug, _embed: '1' },
+      tags: [`aviso:${slug}`],
+    });
+    return res.data?.[0] || null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Busca unidade da estrutura organizacional por slug
+ */
+export async function getEstruturaBySlug(slug: string): Promise<any | null> {
+  try {
+    const res = await wpFetch<any[]>('/estrutura', {
+      params: { slug, _embed: '1' },
+      tags: [`estrutura:${slug}`],
+    });
+    return res.data?.[0] || null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Busca posts por ano e mês
+ */
+export async function getPostsByDate(
+  year: string,
+  month: string,
+  page = 1,
+  perPage = 12
+): Promise<{ posts: WpPost[]; total: number; totalPages: number }> {
+  try {
+    const after = `${year}-${month.padStart(2, '0')}-01T00:00:00`;
+    const nextMonthNum = parseInt(month, 10);
+    const beforeYear = nextMonthNum === 12 ? parseInt(year, 10) + 1 : parseInt(year, 10);
+    const beforeMonth = nextMonthNum === 12 ? 1 : nextMonthNum + 1;
+    const before = `${beforeYear}-${String(beforeMonth).padStart(2, '0')}-01T00:00:00`;
+
+    const res = await wpFetch<WpPost[]>('/posts', {
+      params: {
+        after,
+        before,
+        page,
+        per_page: perPage,
+        _embed: '1',
+      },
+      tags: ['posts'],
+    });
+
+    return {
+      posts: res.data || [],
+      total: res.total ?? res.data.length,
+      totalPages: res.totalPages ?? 1,
+    };
+  } catch {
+    return { posts: [], total: 0, totalPages: 0 };
+  }
+}
+
+/**
  * Busca por termo usando /wp/v2/search ou posts
  */
 export async function searchContent(query: string, page = 1, perPage = 10): Promise<{
@@ -311,3 +471,4 @@ export async function searchContent(query: string, page = 1, perPage = 10): Prom
     return { results: [], total: 0, totalPages: 0 };
   }
 }
+

@@ -9,6 +9,7 @@ import { ContentRenderer } from './ContentRenderer';
 import { Breadcrumbs } from './Breadcrumbs';
 import { rewriteUrl } from '../../lib/links/rewrite';
 import { getNewsArticleJsonLd } from '../../lib/seo/jsonld';
+import { getPostCategoryName } from '../../lib/wordpress/categories';
 import { env } from '../../config/env';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -38,8 +39,7 @@ export function PostDetail({
     // ignore
   }
 
-  const categoryTerms = post._embedded?.['wp:term']?.[0] || [];
-  const primaryCategory = categoryTerms[0]?.name || 'Notícias';
+  const validCategory = getPostCategoryName(post);
 
   const jsonLd = getNewsArticleJsonLd({
     title: post.title.rendered.replace(/<[^>]+>/g, ''),
@@ -60,18 +60,22 @@ export function PostDetail({
 
       <Breadcrumbs
         items={[
-          { name: primaryCategory, url: '/categoria/noticias/' },
+          ...(validCategory
+            ? [{ name: validCategory, url: '/categoria/noticias/' }]
+            : [{ name: 'Notícias', url: '/noticias/' }]),
           { name: post.title.rendered.replace(/<[^>]+>/g, ''), url: rewriteUrl(post.link).url },
         ]}
       />
 
       {/* Cabeçalho do Post */}
       <header className="mb-8 pb-6 border-b border-gray-200">
-        <div className="flex items-center gap-2 mb-3">
-          <span className="bg-[#175057] text-white text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-sm">
-            {primaryCategory}
-          </span>
-        </div>
+        {validCategory && (
+          <div className="flex items-center gap-2 mb-3">
+            <span className="bg-[#175057] text-white text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-sm">
+              {validCategory}
+            </span>
+          </div>
+        )}
 
         <h1
           className="text-2xl sm:text-4xl font-extrabold text-[#175057] leading-tight mb-4"

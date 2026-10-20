@@ -7,6 +7,8 @@ import { rewriteUrl } from '../../lib/links/rewrite';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 
+import { getPostCategoryName } from '../../lib/wordpress/categories';
+
 interface LatestPostsProps {
   posts: WpPost[];
 }
@@ -31,14 +33,6 @@ export function LatestPosts({ posts }: LatestPostsProps) {
       return rewriteUrl(embeddedMedia).url;
     }
     return '/arquivos/2024/05/logo-paraios.png';
-  };
-
-  const getPostCategory = (post: WpPost): string => {
-    const terms = post._embedded?.['wp:term']?.[0];
-    if (Array.isArray(terms) && terms.length > 0 && terms[0]?.name) {
-      return terms[0].name;
-    }
-    return 'Notícias';
   };
 
   const cleanExcerpt = (renderedExcerpt?: string) => {
@@ -75,7 +69,7 @@ export function LatestPosts({ posts }: LatestPostsProps) {
         {posts.slice(0, 6).map((post) => {
           const postUrl = rewriteUrl(post.link).url;
           const imageUrl = getPostImage(post);
-          const categoryName = getPostCategory(post);
+          const categoryName = getPostCategoryName(post);
           const formattedDate = formatPostDate(post.date);
           const excerpt = cleanExcerpt(post.excerpt?.rendered);
 
@@ -94,9 +88,11 @@ export function LatestPosts({ posts }: LatestPostsProps) {
                   referrerPolicy="no-referrer"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
-                <span className="absolute top-3 left-3 bg-[#175057] text-white text-xs font-bold px-2.5 py-1 rounded-sm shadow-xs">
-                  {categoryName}
-                </span>
+                {categoryName && (
+                  <span className="absolute top-3 left-3 bg-[#175057] text-white text-xs font-bold px-2.5 py-1 rounded-sm shadow-xs">
+                    {categoryName}
+                  </span>
+                )}
               </Link>
 
               {/* Informações e Título */}
