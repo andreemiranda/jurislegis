@@ -170,6 +170,16 @@ export function Footer() {
               Mapa do Site
             </Link>
             <span>•</span>
+            <Link
+              href="/api/sync"
+              target="_blank"
+              className="hover:text-white transition-colors text-[11px] text-white/70 flex items-center gap-1.5"
+              title="Status da sincronização com a API REST do WordPress"
+            >
+              <span className="w-2 h-2 rounded-full bg-[#3dc17a] inline-block shadow-xs" />
+              <span>Sincronizado</span>
+            </Link>
+            <span>•</span>
             <a
               href="https://nucleogov.com.br"
               target="_blank"

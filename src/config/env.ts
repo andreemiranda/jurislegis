@@ -14,7 +14,7 @@ const envSchema = z.object({
     .number()
     .int()
     .positive()
-    .default(300),
+    .default(60),
   REVALIDATE_SECRET: z
     .string()
     .default('camara-paraiso-revalidate-secret-token'),
@@ -31,13 +31,13 @@ const envSchema = z.object({
     .number()
     .int()
     .nonnegative()
-    .default(5000),
+    .default(500),
   WP_MAX_CONCURRENCY: z
     .coerce
     .number()
     .int()
     .positive()
-    .default(2),
+    .default(4),
   NEXT_PUBLIC_GA_ID: z
     .string()
     .optional()

@@ -48,7 +48,7 @@ import { AcessibilidadePage } from '../../src/components/content/AcessibilidadeP
 import { constructMetadata } from '../../src/lib/seo/metadata';
 
 export const dynamicParams = true;
-export const revalidate = 300;
+export const revalidate = 60;
 
 interface PageProps {
   params: Promise<{ slug?: string[] }>;
